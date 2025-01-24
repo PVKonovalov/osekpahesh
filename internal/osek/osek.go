@@ -4,6 +4,7 @@ import (
 	"fmt"
 	table "github.com/PVKonovalov/dyn_table"
 	"osekpahesh/internal/configuration"
+	"osekpahesh/internal/report"
 )
 
 type Osek struct {
@@ -74,4 +75,13 @@ func (o *Osek) PrintTransactions() {
 		"",
 		fmt.Sprintf("%.2f", grandTotal),
 	})
+}
+
+func (o *Osek) CreateReports() {
+	report := report.New(&o.Config)
+	for idx := range o.Config.Transaction {
+		if err := report.GenerateReport(idx); err != nil {
+			fmt.Println(err)
+		}
+	}
 }

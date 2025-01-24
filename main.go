@@ -21,4 +21,8 @@ func main() {
 		myOsek.PrintTransactions()
 	}
 
+	if fl.IsGenerateReport() {
+		myOsek.CreateReports()
+	}
+
 }

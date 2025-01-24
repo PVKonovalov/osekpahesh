@@ -2,7 +2,8 @@ package configuration
 
 type OsekPaHesh struct {
 	Osek struct {
-		Name    int    `json:"name"`
+		Name    string `json:"name"`
+		Tz      string `json:"tz"`
 		Address string `json:"address"`
 		Email   string `json:"email"`
 		Sign    string `json:"sign"`
@@ -19,7 +20,7 @@ type OsekPaHesh struct {
 	Client []struct {
 		Name string `json:"name"`
 		Id   int    `json:"id"`
-		Tz   int    `json:"tz,omitempty"`
+		Tz   string `json:"tz,omitempty"`
 	} `json:"client"`
 	Transaction []struct {
 		Receipt uint64  `json:"receipt"`
