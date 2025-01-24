@@ -112,6 +112,7 @@ func (r *ReportPdf) GenerateReport(transactionId int) error {
 	} else {
 		clientName = fmt.Sprintf("%s  :%s    %s    :%s  ", client[transaction.Client-1].Tz, reverse("ת.ז./ע.מ."), client[transaction.Client-1].Name, reverse("לכבוד"))
 	}
+	pdf.SetGrayFill(0.8)
 	err = pdf.CellWithOption(&gopdf.Rect{
 		W: gopdf.PageSizeA4.W - 40.0,
 		H: 30,
