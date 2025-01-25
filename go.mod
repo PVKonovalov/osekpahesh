@@ -4,6 +4,7 @@ go 1.23
 
 require (
 	github.com/PVKonovalov/dyn_table v0.0.0-20240824125954-2fb6294abe2a
+	github.com/dustin/go-humanize v1.0.1
 	github.com/signintech/gopdf v0.29.1
 	gopkg.in/yaml.v3 v3.0.1
 )
