@@ -78,9 +78,9 @@ func (o *Osek) PrintTransactions() {
 }
 
 func (o *Osek) CreateReports() {
-	report := report.New(&o.Config)
+	osekReport := report.New(&o.Config)
 	for idx := range o.Config.Transaction {
-		if err := report.GenerateReport(idx); err != nil {
+		if err := osekReport.GenerateReport(idx); err != nil {
 			fmt.Println(err)
 		}
 	}
