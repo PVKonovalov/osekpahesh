@@ -7,19 +7,16 @@ type OsekPaHesh struct {
 		Address string `json:"address"`
 		Email   string `json:"email"`
 		Sign    string `json:"sign"`
-		Account []struct {
-			Id       int    `json:"id"`
+		Account map[int]struct {
 			Currency string `json:"currency"`
 			Number   string `json:"number"`
 		} `json:"account"`
-		Service []struct {
-			Id   int    `json:"id"`
+		Service map[int]struct {
 			Name string `json:"name"`
 		} `json:"service"`
 	} `json:"osek"`
-	Client []struct {
+	Client map[int]struct {
 		Name string `json:"name"`
-		Id   int    `json:"id"`
 		Tz   string `json:"tz,omitempty"`
 	} `json:"client"`
 	Transaction []struct {

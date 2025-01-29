@@ -128,10 +128,10 @@ func (r *ReportPdf) GenerateReport(transactionId int) error {
 		return err
 	}
 	var clientName string
-	if len(client[transaction.Client-1].Tz) == 0 {
-		clientName = fmt.Sprintf("%s    :%s  ", client[transaction.Client-1].Name, reverse("לכבוד"))
+	if len(client[transaction.Client].Tz) == 0 {
+		clientName = fmt.Sprintf("%s    :%s  ", client[transaction.Client].Name, reverse("לכבוד"))
 	} else {
-		clientName = fmt.Sprintf("%s  :%s    %s    :%s  ", client[transaction.Client-1].Tz, reverse("ת.ז./ע.מ."), client[transaction.Client-1].Name, reverse("לכבוד"))
+		clientName = fmt.Sprintf("%s  :%s    %s    :%s  ", client[transaction.Client].Tz, reverse("ת.ז./ע.מ."), client[transaction.Client].Name, reverse("לכבוד"))
 	}
 	pdf.SetGrayFill(0.1)
 	err = pdf.CellWithOption(&gopdf.Rect{
@@ -159,10 +159,10 @@ func (r *ReportPdf) GenerateReport(transactionId int) error {
 	tableTransaction.AddColumn(reverse("פירוט"), gopdf.PageSizeA4.W-280, "right")
 
 	tableTransaction.AddRow([]string{
-		fmt.Sprintf("%s %s", account[transaction.Account-1].Currency, humanize.FormatFloat("#,###.##", transaction.Total)),
+		fmt.Sprintf("%s %s", account[transaction.Account].Currency, humanize.FormatFloat("#,###.##", transaction.Total)),
 		fmt.Sprintf("%d", transaction.Amount),
-		fmt.Sprintf("%s %s", account[transaction.Account-1].Currency, humanize.FormatFloat("#,###.##", transaction.Total)),
-		service[transaction.Service-1].Name,
+		fmt.Sprintf("%s %s", account[transaction.Account].Currency, humanize.FormatFloat("#,###.##", transaction.Total)),
+		service[transaction.Service].Name,
 	})
 	if transaction.Account != 1 {
 		tableTransaction.AddRow([]string{fmt.Sprintf("%.4f %s", transaction.Rate, reverse("לפי שער")), reverse("דולר"), reverse("מטבע"), ""})
@@ -198,15 +198,15 @@ func (r *ReportPdf) GenerateReport(transactionId int) error {
 
 	if transaction.Account != 1 {
 		tableGrandTotal.AddRow([]string{
-			fmt.Sprintf("%s %s", account[transaction.Account-1].Currency, humanize.FormatFloat("#,###.##", transaction.Total)),
+			fmt.Sprintf("%s %s", account[transaction.Account].Currency, humanize.FormatFloat("#,###.##", transaction.Total)),
 			transaction.Date,
-			fmt.Sprintf("%s :%s", account[transaction.Account-1].Number, reverse("הופקד לחשבון")),
+			fmt.Sprintf("%s :%s", account[transaction.Account].Number, reverse("הופקד לחשבון")),
 			reverse("העברה בנקאית")})
 	} else {
 		tableGrandTotal.AddRow([]string{
 			fmt.Sprintf("₪ %s", humanize.FormatFloat("#,###.##", transaction.Total*transaction.Rate)),
 			transaction.Date,
-			fmt.Sprintf("%s :%s", account[transaction.Account-1].Number, reverse("הופקד לחשבון")),
+			fmt.Sprintf("%s :%s", account[transaction.Account].Number, reverse("הופקד לחשבון")),
 			reverse("העברה בנקאית")})
 	}
 

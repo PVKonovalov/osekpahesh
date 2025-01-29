@@ -37,7 +37,7 @@ func (o *Osek) PrintTransactions() {
 	var grandTotal float64
 
 	tab := table.DynTable{
-		Width:   []int{4, 8, 12, 10, 7, 10},
+		Width:   []int{4, 8, 12, 12, 7, 12},
 		Headers: []string{"#", "Receipt", "Date", "Total", "Rate", "Total, NIS"},
 		Align:   []int{table.AlignRight, table.AlignRight, table.AlignRight, table.AlignRight, table.AlignLeft, table.AlignRight},
 	}
@@ -50,7 +50,7 @@ func (o *Osek) PrintTransactions() {
 				fmt.Sprintf("%d", idx+1),
 				fmt.Sprintf("%d", transaction.Receipt),
 				transaction.Date,
-				fmt.Sprintf("%.2f", transaction.Total),
+				fmt.Sprintf("%s %.2f", o.Config.Osek.Account[transaction.Account].Currency, transaction.Total),
 				fmt.Sprintf("%.4f", transaction.Rate),
 				fmt.Sprintf("%.2f", transaction.Total*transaction.Rate),
 			})
@@ -62,7 +62,7 @@ func (o *Osek) PrintTransactions() {
 				transaction.Date,
 				"",
 				"",
-				fmt.Sprintf("%.2f", transaction.Total),
+				fmt.Sprintf("%s %.2f", o.Config.Osek.Account[transaction.Account].Currency, transaction.Total),
 			})
 			grandTotal += transaction.Total
 		}
@@ -73,7 +73,7 @@ func (o *Osek) PrintTransactions() {
 		"",
 		"",
 		"",
-		fmt.Sprintf("%.2f", grandTotal),
+		fmt.Sprintf("%s %.2f", o.Config.Osek.Account[1].Currency, grandTotal),
 	})
 }
 
