@@ -110,5 +110,5 @@ func (c *Rate) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		return nil
 	}
 
-	return fmt.Errorf("invalid currency format: '%s' (expected format 'X.XX')", asString)
+	return fmt.Errorf("invalid currency format: '%s' (expected format 'X.XXXXXX')", asString)
 }
