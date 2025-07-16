@@ -1,5 +1,6 @@
 .idea/
 .env
 my*
-asset/images/
+asset/images/*
 *.pdf
+reports*/

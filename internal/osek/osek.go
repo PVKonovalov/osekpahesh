@@ -37,9 +37,9 @@ func (o *Osek) PrintTransactions() {
 	var grandTotal float64
 
 	tab := table.DynTable{
-		Width:   []int{4, 8, 12, 12, 7, 12},
-		Headers: []string{"#", "Receipt", "Date", "Total", "Rate", "Total, NIS"},
-		Align:   []int{table.AlignRight, table.AlignRight, table.AlignRight, table.AlignRight, table.AlignLeft, table.AlignRight},
+		Width:   []int{4, 15, 8, 12, 12, 7, 12},
+		Headers: []string{"#", "Client", "Receipt", "Date", "Total", "Rate", "Total, NIS"},
+		Align:   []int{table.AlignRight, table.AlignLeft, table.AlignRight, table.AlignRight, table.AlignRight, table.AlignLeft, table.AlignRight},
 	}
 
 	tab.WriteHeader(nil, 2)
@@ -48,6 +48,7 @@ func (o *Osek) PrintTransactions() {
 		if transaction.Account != 1 {
 			tab.AppendRow([]string{
 				fmt.Sprintf("%d", idx+1),
+				fmt.Sprintf("%s", o.Config.Client[transaction.Client].Name),
 				fmt.Sprintf("%d", transaction.Receipt),
 				transaction.Date,
 				fmt.Sprintf("%s %.2f", o.Config.Osek.Account[transaction.Account].Currency, transaction.Total),
@@ -58,6 +59,7 @@ func (o *Osek) PrintTransactions() {
 		} else {
 			tab.AppendRow([]string{
 				fmt.Sprintf("%d", idx+1),
+				fmt.Sprintf("%s", o.Config.Client[transaction.Client].Name),
 				fmt.Sprintf("%d", transaction.Receipt),
 				transaction.Date,
 				"",
@@ -68,6 +70,7 @@ func (o *Osek) PrintTransactions() {
 		}
 	}
 	tab.AppendRow([]string{
+		"",
 		"",
 		"",
 		"",
