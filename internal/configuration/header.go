@@ -1,5 +1,7 @@
 package configuration
 
+import "osekpahesh/internal/currency"
+
 type OsekPaHesh struct {
 	Osek struct {
 		Name    string `json:"name"`
@@ -20,13 +22,13 @@ type OsekPaHesh struct {
 		Tz   string `json:"tz,omitempty"`
 	} `json:"client"`
 	Transaction []struct {
-		Receipt uint64  `json:"receipt"`
-		Date    string  `json:"date"`
-		Service int     `json:"service"`
-		Client  int     `json:"client"`
-		Amount  int     `json:"amount"`
-		Account int     `json:"account"`
-		Rate    float64 `json:"rate,omitempty"`
-		Total   float64 `json:"total"`
+		Receipt uint64            `json:"receipt"`
+		Date    string            `json:"date"`
+		Service int               `json:"service"`
+		Client  int               `json:"client"`
+		Amount  int               `json:"amount"`
+		Account int               `json:"account"`
+		Rate    currency.Rate     `json:"rate,omitempty"`
+		Total   currency.Currency `json:"total"`
 	} `json:"transaction"`
 }

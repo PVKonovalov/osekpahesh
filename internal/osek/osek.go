@@ -4,6 +4,7 @@ import (
 	"fmt"
 	table "github.com/PVKonovalov/dyn_table"
 	"osekpahesh/internal/configuration"
+	"osekpahesh/internal/currency"
 	"osekpahesh/internal/report"
 )
 
@@ -19,14 +20,14 @@ func (o *Osek) LoadConfiguration(pathToConfig string) error {
 	return configuration.ReadConfigFromYMLFile(pathToConfig, &o.Config)
 }
 
-func (o *Osek) GetGrandTotal() float64 {
-	var grandTotal float64
+func (o *Osek) getGrandTotal() currency.Currency {
+	var grandTotal currency.Currency
 
 	for _, transaction := range o.Config.Transaction {
 		if transaction.Account != 1 {
-			grandTotal += transaction.Rate * transaction.Total
+			grandTotal.Add(*transaction.Total.Rate(transaction.Rate))
 		} else {
-			grandTotal += transaction.Total
+			grandTotal.Add(transaction.Total)
 		}
 	}
 
@@ -34,10 +35,10 @@ func (o *Osek) GetGrandTotal() float64 {
 }
 
 func (o *Osek) PrintTransactions() {
-	var grandTotal float64
+	var grandTotal currency.Currency
 
 	tab := table.DynTable{
-		Width:   []int{4, 15, 8, 12, 12, 7, 12},
+		Width:   []int{4, 20, 8, 12, 12, 7, 12},
 		Headers: []string{"#", "Client", "Receipt", "Date", "Total", "Rate", "Total, NIS"},
 		Align:   []int{table.AlignRight, table.AlignLeft, table.AlignRight, table.AlignRight, table.AlignRight, table.AlignLeft, table.AlignRight},
 	}
@@ -45,17 +46,18 @@ func (o *Osek) PrintTransactions() {
 	tab.WriteHeader(nil, 2)
 
 	for idx, transaction := range o.Config.Transaction {
+		rated := transaction.Total.Rate(transaction.Rate)
 		if transaction.Account != 1 {
 			tab.AppendRow([]string{
 				fmt.Sprintf("%d", idx+1),
 				fmt.Sprintf("%s", o.Config.Client[transaction.Client].Name),
 				fmt.Sprintf("%d", transaction.Receipt),
 				transaction.Date,
-				fmt.Sprintf("%s %.2f", o.Config.Osek.Account[transaction.Account].Currency, transaction.Total),
-				fmt.Sprintf("%.4f", transaction.Rate),
-				fmt.Sprintf("%.2f", transaction.Total*transaction.Rate),
+				fmt.Sprintf("%s %s", o.Config.Osek.Account[transaction.Account].Currency, transaction.Total.String()),
+				fmt.Sprintf("%4s", transaction.Rate.String()),
+				fmt.Sprintf("%s", rated.String()),
 			})
-			grandTotal += transaction.Rate * transaction.Total
+			grandTotal.Add(*rated)
 		} else {
 			tab.AppendRow([]string{
 				fmt.Sprintf("%d", idx+1),
@@ -64,9 +66,9 @@ func (o *Osek) PrintTransactions() {
 				transaction.Date,
 				"",
 				"",
-				fmt.Sprintf("%s %.2f", o.Config.Osek.Account[transaction.Account].Currency, transaction.Total),
+				fmt.Sprintf("%s %s", o.Config.Osek.Account[transaction.Account].Currency, transaction.Total.String()),
 			})
-			grandTotal += transaction.Total
+			grandTotal.Add(transaction.Total)
 		}
 	}
 	tab.AppendRow([]string{
@@ -76,7 +78,7 @@ func (o *Osek) PrintTransactions() {
 		"",
 		"",
 		"",
-		fmt.Sprintf("%s %.2f", o.Config.Osek.Account[1].Currency, grandTotal),
+		fmt.Sprintf("%s %s", o.Config.Osek.Account[1].Currency, grandTotal.String()),
 	})
 }
 
