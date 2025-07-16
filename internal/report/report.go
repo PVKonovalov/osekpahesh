@@ -2,7 +2,6 @@ package report
 
 import (
 	"fmt"
-	"github.com/dustin/go-humanize"
 	"github.com/signintech/gopdf"
 	"os"
 	"osekpahesh/internal/configuration"
@@ -159,13 +158,13 @@ func (r *ReportPdf) GenerateReport(transactionId int) error {
 	tableTransaction.AddColumn(reverse("פירוט"), gopdf.PageSizeA4.W-280, "right")
 
 	tableTransaction.AddRow([]string{
-		fmt.Sprintf("%s %s", account[transaction.Account].Currency, humanize.FormatFloat("#,###.##", transaction.Total)),
+		fmt.Sprintf("%s %s", account[transaction.Account].Currency, transaction.Total.Format("#,###.##")),
 		fmt.Sprintf("%d", transaction.Amount),
-		fmt.Sprintf("%s %s", account[transaction.Account].Currency, humanize.FormatFloat("#,###.##", transaction.Total)),
+		fmt.Sprintf("%s %s", account[transaction.Account].Currency, transaction.Total.Format("#,###.##")),
 		service[transaction.Service].Name,
 	})
 	if transaction.Account != 1 {
-		tableTransaction.AddRow([]string{fmt.Sprintf("%.4f %s", transaction.Rate, reverse("לפי שער")), reverse("דולר"), reverse("מטבע"), ""})
+		tableTransaction.AddRow([]string{fmt.Sprintf("%s %s", transaction.Rate.StringLen(7), reverse("לפי שער")), reverse("דולר"), reverse("מטבע"), ""})
 	}
 
 	tableTransaction.SetHeaderStyle(gopdf.CellStyle{
@@ -198,20 +197,20 @@ func (r *ReportPdf) GenerateReport(transactionId int) error {
 
 	if transaction.Account != 1 {
 		tableGrandTotal.AddRow([]string{
-			fmt.Sprintf("%s %s", account[transaction.Account].Currency, humanize.FormatFloat("#,###.##", transaction.Total)),
+			fmt.Sprintf("%s %s", account[transaction.Account].Currency, transaction.Total.Format("#,###.##")),
 			transaction.Date,
 			fmt.Sprintf("%s :%s", account[transaction.Account].Number, reverse("הופקד לחשבון")),
 			reverse("העברה בנקאית")})
 	} else {
 		tableGrandTotal.AddRow([]string{
-			fmt.Sprintf("₪ %s", humanize.FormatFloat("#,###.##", transaction.Total*transaction.Rate)),
+			fmt.Sprintf("₪ %s", transaction.Total.Rate(transaction.Rate).Format("#,###.##")),
 			transaction.Date,
 			fmt.Sprintf("%s :%s", account[transaction.Account].Number, reverse("הופקד לחשבון")),
 			reverse("העברה בנקאית")})
 	}
 
 	tableGrandTotal.AddRow([]string{
-		fmt.Sprintf("₪ %s", humanize.FormatFloat("#,###.##", transaction.Total*transaction.Rate)),
+		fmt.Sprintf("₪ %s", transaction.Total.Rate(transaction.Rate).Format("#,###.##")),
 		reverse("סה\"כ שולם"),
 		"",
 		""})
